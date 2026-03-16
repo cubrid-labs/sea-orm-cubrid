@@ -1,0 +1,30 @@
+[package]
+name = "sea-orm-cubrid"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+description = "SeaORM backend for CUBRID database"
+license = "MIT"
+repository = "https://github.com/cubrid-labs/sea-orm-cubrid"
+keywords = ["cubrid", "sea-orm", "orm", "database", "async"]
+categories = ["database"]
+
+[dependencies]
+sea-orm = { version = "1", features = ["proxy"] }
+sea-query = "0"
+cubrid-tokio = "0.1"
+cubrid-protocol = "0.1"
+async-trait = "0.1"
+tokio = { version = "1", features = ["sync"] }
+thiserror = "2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+
+[lints.rust]
+unexpected_cfgs = { level = "allow", check-cfg = ['cfg(coverage)'] }
+
+[patch.crates-io]
+cubrid-protocol = { git = "https://github.com/cubrid-labs/cubrid-rs", package = "cubrid-protocol" }
+cubrid-client = { git = "https://github.com/cubrid-labs/cubrid-rs", package = "cubrid-client" }
+cubrid-tokio = { git = "https://github.com/cubrid-labs/cubrid-rs", package = "cubrid-tokio" }
