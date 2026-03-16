@@ -38,7 +38,7 @@ pub trait CubridClient: Send + Sync {
     async fn ping(&mut self) -> Result<String, CubridError>;
 }
 
-#[cfg(not(coverage))]
+#[cfg(not(tarpaulin_include))]
 #[async_trait]
 impl CubridClient for cubrid_tokio::Client {
     async fn query(
@@ -91,33 +91,29 @@ where
     }
 
     fn convert_statement(statement: &Statement) -> (String, Vec<CubridValue>) {
-        let params = statement
-            .values
-            .as_ref()
-            .map(|values| values.iter().map(sea_value_to_cubrid).collect())
-            .unwrap_or_default();
-
+        let params: Vec<CubridValue> = match &statement.values {
+            Some(values) => values.iter().map(sea_value_to_cubrid).collect(),
+            None => Vec::new(),
+        };
         (statement.sql.clone(), params)
     }
 
     fn map_rows(result: cubrid_tokio::QueryResult) -> Vec<ProxyRow> {
-        result
-            .rows
-            .iter()
-            .map(|row| {
-                let mut values = BTreeMap::new();
-                for (index, value) in row.iter().enumerate() {
-                    let col_name = result
-                        .columns
-                        .get(index)
-                        .map(|column| column.name.as_str())
-                        .unwrap_or("column");
-                    let (col_name, value) = cubrid_value_to_sea(value, col_name);
-                    values.insert(col_name, value);
-                }
-                ProxyRow { values }
-            })
-            .collect()
+        let mut proxy_rows = Vec::with_capacity(result.rows.len());
+        for row in &result.rows {
+            let mut values = BTreeMap::new();
+            for (index, value) in row.iter().enumerate() {
+                let col_name = if index < result.columns.len() {
+                    result.columns[index].name.as_str()
+                } else {
+                    "column"
+                };
+                let (col_name, sea_val) = cubrid_value_to_sea(value, col_name);
+                values.insert(col_name, sea_val);
+            }
+            proxy_rows.push(ProxyRow { values });
+        }
+        proxy_rows
     }
 }
 
@@ -137,10 +133,7 @@ where
         let (sql, params) = Self::convert_statement(&statement);
         let mut client = self.client.lock().await;
         let rows_affected = client.execute(&sql, &params).await.map_err(into_db_err)?;
-        Ok(ProxyExecResult {
-            last_insert_id: 0,
-            rows_affected,
-        })
+        Ok(ProxyExecResult { last_insert_id: 0, rows_affected })
     }
 
     async fn begin(&self) {
