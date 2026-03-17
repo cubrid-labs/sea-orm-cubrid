@@ -1,9 +1,12 @@
 # sea-orm-cubrid
 
+<!-- BADGES:START -->
 [![crates.io](https://img.shields.io/crates/v/sea-orm-cubrid.svg)](https://crates.io/crates/sea-orm-cubrid)
 [![CI](https://github.com/cubrid-labs/sea-orm-cubrid/actions/workflows/ci.yml/badge.svg)](https://github.com/cubrid-labs/sea-orm-cubrid/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-95%25%2B-brightgreen.svg)](https://github.com/cubrid-labs/sea-orm-cubrid)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/cubrid-labs/sea-orm-cubrid)](https://github.com/cubrid-labs/sea-orm-cubrid)
+<!-- BADGES:END -->
 
 SeaORM backend crate for CUBRID via SeaORM's `ProxyDatabaseTrait`.
 
@@ -101,3 +104,4 @@ No. Test coverage is offline and deterministic.
 | [gorm-cubrid](https://github.com/cubrid-labs/gorm-cubrid) | GORM dialect for CUBRID | Go |
 | [cubrid-rs](https://github.com/cubrid-labs/cubrid-rs) | Native Rust driver (sync + async) | Rust |
 | [cubrid-cookbook](https://github.com/cubrid-labs/cubrid-cookbook) | examples | Multi |
+| [cubrid-benchmark](https://github.com/cubrid-labs/cubrid-benchmark) | Multi-language benchmark suite | Multi |
