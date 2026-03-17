@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toolchain: [stable, "1.70.0"]
+        toolchain: [stable, "1.75.0"]
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toolchain: [stable, "1.70.0"]
+        toolchain: [stable, "1.75.0"]
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust

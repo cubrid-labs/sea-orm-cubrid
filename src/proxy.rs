@@ -133,7 +133,10 @@ where
         let (sql, params) = Self::convert_statement(&statement);
         let mut client = self.client.lock().await;
         let rows_affected = client.execute(&sql, &params).await.map_err(into_db_err)?;
-        Ok(ProxyExecResult { last_insert_id: 0, rows_affected })
+        Ok(ProxyExecResult {
+            last_insert_id: 0,
+            rows_affected,
+        })
     }
 
     async fn begin(&self) {

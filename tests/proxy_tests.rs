@@ -360,10 +360,7 @@ async fn execute_returns_correct_affected_rows() {
 #[tokio::test]
 async fn query_with_multiple_rows() {
     let mock = MockClient {
-        query_columns: vec![
-            col("id", DataType::Int),
-            col("score", DataType::Float),
-        ],
+        query_columns: vec![col("id", DataType::Int), col("score", DataType::Float)],
         query_rows: vec![
             vec![CubridValue::Int(1), CubridValue::Float(9.5)],
             vec![CubridValue::Int(2), CubridValue::Float(8.0)],
