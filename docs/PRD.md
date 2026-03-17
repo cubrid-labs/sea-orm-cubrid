@@ -24,8 +24,12 @@ The crate implements SeaORM's `ProxyDatabaseTrait` and delegates database I/O to
 
 Core pattern: `ProxyDatabaseTrait`
 
-```text
-SeaORM API -> ProxyDatabaseTrait -> CubridProxy -> cubrid-tokio -> CUBRID
+```mermaid
+flowchart TD
+    A[SeaORM API] --> B[ProxyDatabaseTrait]
+    B --> C[CubridProxy]
+    C --> D[cubrid-tokio]
+    D --> E[CUBRID]
 ```
 
 Design decisions:

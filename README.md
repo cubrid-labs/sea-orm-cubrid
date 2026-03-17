@@ -39,20 +39,37 @@ async fn main() -> Result<(), DbErr> {
 
 `sea-orm-cubrid` does not fork SeaORM. It adapts `cubrid-tokio` into SeaORM's proxy backend.
 
-```text
-SeaORM Entity API
-      |
-      v
-ProxyDatabaseTrait (SeaORM)
-      |
-      v
-CubridProxy (this crate)
-      |
-      v
-cubrid-tokio Client
-      |
-      v
-CUBRID Broker / DB
+```mermaid
+flowchart TD
+    A[Application] --> B[SeaORM]
+    B --> C[sea-orm-cubrid\nProxyDatabaseTrait]
+    C --> D[cubrid-client\nSync Client]
+    D --> E[CAS Protocol]
+    E --> F[CUBRID Server]
+
+    C -. async to sync bridge via spawn_blocking .-> D
+```
+
+```mermaid
+sequenceDiagram
+    participant App as Application
+    participant ORM as SeaORM (async)
+    participant Proxy as sea-orm-cubrid (ProxyDatabaseTrait)
+    participant Client as cubrid-client (sync)
+    participant CAS as CAS Protocol
+    participant DB as CUBRID Server
+
+    App->>ORM: Entity/query API call
+    ORM->>Proxy: execute/query with Statement
+    Proxy->>Proxy: spawn_blocking delegation
+    Proxy->>Client: sync execute/query
+    Client->>CAS: wire protocol request
+    CAS->>DB: brokered SQL execution
+    DB-->>CAS: result set / status
+    CAS-->>Client: protocol response
+    Client-->>Proxy: rows / affected count
+    Proxy-->>ORM: ProxyRow / ExecResult
+    ORM-->>App: async result
 ```
 
 - SeaORM SQL generation uses `DbBackend::MySql` for CUBRID-compatible SQL.
