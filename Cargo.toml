@@ -5,6 +5,7 @@ edition = "2021"
 rust-version = "1.88"
 description = "SeaORM backend for CUBRID database"
 license = "MIT"
+authors = ["Gyeongjun Paik <paikend@gmail.com>", "Yeongseon Choe <yeongseon.choe@gmail.com>"]
 repository = "https://github.com/cubrid-labs/sea-orm-cubrid"
 keywords = ["cubrid", "sea-orm", "orm", "database", "async"]
 categories = ["database"]
